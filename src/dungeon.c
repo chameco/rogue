@@ -24,9 +24,10 @@ int sector_to_universal(int s, int sector_index)
 
 void load_dungeon(dungeon *d, char *name, int player_x, int player_y)
 {
-	if (name != NULL) {
+	if (name != NULL) { //shortcut to prevent unneeded copies
 		strncpy(d->name, name, sizeof(d->name));
 	}
+	memset(d->sectors, 0, sizeof(d->sectors));
 	d->player_x = player_x;
 	d->player_y = player_y;
 	char path[100];
@@ -34,8 +35,10 @@ void load_dungeon(dungeon *d, char *name, int player_x, int player_y)
 		for (int y = 0; y < 3; ++y) {
 			int ax = d->player_x - 1 + x;
 			int ay = d->player_y - 1 + y;
-			sprintf(path, "dungeons/%s/%d_%d.lvl", d->name, ax, ay);
-			load_level(&d->sectors[x][y], path);
+			if (ax >= 0 && ay >= 0) {
+				sprintf(path, "dungeons/%s/%d_%d.lvl", d->name, ax, ay);
+				load_level(&d->sectors[x][y], path);
+			}
 		}
 	}
 }
@@ -47,8 +50,10 @@ void save_dungeon(dungeon *d)
 		for (int y = 0; y < 3; ++y) {
 			int ax = d->player_x - 1 + x;
 			int ay = d->player_y - 1 + y;
-			sprintf(path, "dungeons/%s/%d_%d.lvl", d->name, ax, ay);
-			save_level(&d->sectors[x][y], path);
+			if (ax >= 0 && ay >= 0) {
+				sprintf(path, "dungeons/%s/%d_%d.lvl", d->name, ax, ay);
+				save_level(&d->sectors[x][y], path);
+			}
 		}
 	}
 }

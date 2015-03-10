@@ -7,7 +7,7 @@
 
 #include "color.h"
 
-#define LEVEL_DIM 256
+#define LEVEL_DIM 32
 
 struct level;
 struct entity;
@@ -15,6 +15,7 @@ struct entity;
 typedef enum tile_index {
 	VOID = 0,
 	GROUND,
+	TREE,
 	STONE_FLOOR,
 	STONE_WALL,
 	DOOR

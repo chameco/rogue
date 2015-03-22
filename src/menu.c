@@ -7,7 +7,6 @@
 #include <ncurses.h>
 
 #include <cuttle/debug.h>
-#include <cuttle/utils.h>
 
 #include "color.h"
 #include "graphics.h"

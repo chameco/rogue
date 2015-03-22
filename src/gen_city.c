@@ -12,8 +12,14 @@
 #include "error.h"
 #include "level.h"
 #include "genutils.h"
+#include "graphics.h"
 
 #include "gen_jungle.h"
+
+void __handler(level *l, entity *e)
+{
+	hud_line(2, "goblin", GREEN);
+}
 
 void __gen_city(level *l)
 {
@@ -28,7 +34,14 @@ void __gen_city(level *l)
 	for (int i = 0; i < LEVEL_DIM; ++i) {
 		generate_tile(l,&c, 1, TREE);
 	}
-	for (int i = 0; i < 5; ++i) {
-		generate_room(l, &c, 2, 5, 5, STONE_WALL, STONE_FLOOR);
+	for (int i = 0; i < 2; ++i) {
+		generate_room(l, &c, 2, 10, 10, STONE_WALL, STONE_FLOOR);
 	}
+	entity *e = &l->enemies[l->enemy_index++];
+	e->x = 0;
+	e->y = 0;
+	e->glyph = 'g';
+	e->color = GREEN;
+	e->at = AI_NONE;
+	e->collision_handler = __handler;
 }

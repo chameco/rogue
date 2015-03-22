@@ -6,11 +6,12 @@
 #include <ncurses.h>
 
 #include "color.h"
+#include "entity.h"
 
 #define LEVEL_DIM 32
+#define MAX_ENEMIES 64
 
 struct level;
-struct entity;
 
 typedef enum tile_index {
 	VOID = 0,
@@ -26,13 +27,14 @@ typedef struct tile {
 	color color;
 	bool breakable;
 	bool transparent;
-	void (*collision_handler)(struct level *l, int x, int y, struct entity *entity);
+	void (*collision_handler)(struct level *l, int x, int y, entity *entity);
 } tile;
 
 typedef struct level {
 	tile_index walls[LEVEL_DIM][LEVEL_DIM];
 	tile_index floor[LEVEL_DIM][LEVEL_DIM];
-	int sector_index;
+	entity enemies[MAX_ENEMIES];
+	int enemy_index;
 } level;
 
 void load_level(level *l, char *p);

@@ -12,6 +12,7 @@
 #include "color.h"
 #include "entity.h"
 #include "graphics.h"
+#include "enemy.h"
 
 #include "gen_jungle.h"
 #include "gen_city.h"
@@ -35,8 +36,7 @@ void load_level(level *l, char *p)
 {
 	FILE *f = fopen(p, "r");
 	if (f == NULL) {
-		//memset(l, VOID, sizeof(level));
-		__gen_city(l);
+		__gen_city(l); //TODO
 	} else {
 		fread(l, sizeof(level), 1, f);
 		fclose(f);
@@ -80,5 +80,6 @@ void draw_level(level *l, int camera_x, int camera_y)
 				}
 			}
 		}
+		draw_enemies(l, camera_x, camera_y);
 	}
 }

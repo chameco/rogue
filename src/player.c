@@ -10,17 +10,18 @@
 
 #include "entity.h"
 
-entity player;
+entity PLAYER;
 
 void initialize_player()
 {
-	player.x = player.y = 0;
-	player.glyph = '@';
-	player.color.fg = COLOR_WHITE;
-	player.color.bg = COLOR_BLACK;
+	PLAYER.x = PLAYER.y = 0;
+	PLAYER.glyph = '@';
+	PLAYER.color.fg = COLOR_WHITE;
+	PLAYER.color.bg = COLOR_BLACK;
+	PLAYER.at = AI_NONE;
 }
 
 entity *get_player()
 {
-	return &player;
+	return &PLAYER;
 }

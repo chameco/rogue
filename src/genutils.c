@@ -25,8 +25,8 @@ void generate_tile(level *l, claimed_tiles *c, int prio, tile_index wall)
 
 void generate_room(level *l, claimed_tiles *c, int prio, int w, int h, tile_index wall, tile_index floor)
 {
-	int x = rand() % (LEVEL_DIM - 5);
-	int y = rand() % (LEVEL_DIM - 5);
+	int x = rand() % (LEVEL_DIM - w);
+	int y = rand() % (LEVEL_DIM - h);
 	int mx = x + w;
 	int my = y + h;
 	for (int i = x; i < mx; ++i) {

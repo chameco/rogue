@@ -20,27 +20,12 @@
 #include "gen_city.h"
 
 mode CURRENT_MODE;
-//level CURRENT_LEVEL;
 dungeon CURRENT_DUNGEON;
 bool GAME_RUNNING = true;
 
 void set_mode(mode m)
 {
 	CURRENT_MODE= m;
-}
-
-void generate_overworld() //TODO: temp
-{
-	dungeon d;
-	strcpy(d.name, "overworld");
-	d.player_x = 1;
-	d.player_y = 1;
-	/*for (int i = 0; i < 3; ++i) {
-		for (int j = 0; j < 3; ++j) {
-			__gen_jungle(&d.sectors[i][j]);
-		}
-	}
-	save_dungeon(&d);*/
 }
 
 void set_current_dungeon(char *name, int player_x, int player_y)
@@ -53,7 +38,6 @@ void main_game_loop()
 {
 	int input;
 	int tx, ty; // temporaries
-	char s[100];
 	int count = 0;
 	while (GAME_RUNNING) {
 		entity *player = get_player();
@@ -79,11 +63,6 @@ void main_game_loop()
 						}
 					}
 				}
-				sprintf(s, "trees: %d", count);
-				hud_line(1, s, RED);
-				sprintf(s, "x, y: %d, %d", CURRENT_DUNGEON.player_x, CURRENT_DUNGEON.player_y);
-				hud_line(2, s, RED);
-				//draw_level(&CURRENT_LEVEL, player->x, player->y);
 				draw_dungeon(&CURRENT_DUNGEON, player->x, player->y);
 				draw_entity(player, player->x, player->y);
 				draw_hud();

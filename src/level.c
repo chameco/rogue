@@ -14,7 +14,6 @@
 #include "graphics.h"
 #include "enemy.h"
 
-#include "gen_jungle.h"
 #include "gen_city.h"
 
 void __collide_door(level *l, int x, int y, entity *e)

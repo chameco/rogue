@@ -19,8 +19,8 @@ int main(int argc, char *argv[])
 	initialize_player();
 	initialize_menu();
 
-	hud_line(0, "testing hud", GREEN);
-	menu_line(0, "QUEST FOR THE CITY OF GOLD", YELLOW);
+	menu_line(0, "C I B O LA", YELLOW);
+	menu_line(1, "~ Memories of a cold, hard world", WHITE);
 	set_mode(MODE_MENU);
 	
 	set_current_dungeon("overworld", 1, 1);

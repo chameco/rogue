@@ -9,6 +9,8 @@
 #include <cuttle/debug.h>
 
 #include "error.h"
+#include "enemy.h"
+#include "dungeon.h"
 #include "level.h"
 #include "color.h"
 #include "graphics.h"
@@ -21,19 +23,11 @@ void draw_entity(entity *e, int camera_x, int camera_y)
 	}
 }
 
-static void move_entity_worker(entity *e, level *l, int tx, int ty) {
+bool move_entity_worker(entity *e, dungeon *d, int tx, int ty) {
+	level *l;
 	if (tx >= 0 && ty >= 0 && tx < LEVEL_DIM && ty < LEVEL_DIM) {
-		for (int i = 0; i < l->enemy_index; ++i) {
-			char s[256];
-			sprintf(s, "check: %d, %d | %d, %d | %p", l->enemies[i].x, l->enemies[i].y, tx, ty, l->enemies[i].collision_handler);
-			hud_line(3, s, RED);
-			if (l->enemies[i].x == tx && l->enemies[i].y == ty) {
-				if (l->enemies[i].collision_handler != NULL) {
-					l->enemies[i].collision_handler(l, e);
-				}
-				return;
-			}
-		}
+		l = &(d->sectors[1][1]);
+		if (collide_enemies(l, e, tx, ty)) return false;
 		if (l->walls[tx][ty] == VOID) {
 			e->x = tx;
 			e->y = ty;
@@ -43,27 +37,50 @@ static void move_entity_worker(entity *e, level *l, int tx, int ty) {
 			}
 		}
 	} else {
-		e->x = tx;
-		e->y = ty;
+		if (tx < 0) {
+			l = &(d->sectors[0][1]);
+			tx = LEVEL_DIM - 1;
+		} else if (tx >= LEVEL_DIM) {
+			l = &(d->sectors[2][1]);
+			tx = 0;
+		}
+		if (ty < 0) {
+			l = &(d->sectors[1][0]);
+			ty = LEVEL_DIM - 1;
+		} else if (ty >= LEVEL_DIM) {
+			l = &(d->sectors[1][2]);
+			ty = 0;
+		}
+		if (collide_enemies(l, e, tx, ty)) return false;
+		if (l->walls[tx][ty] == VOID) {
+			e->x = tx;
+			e->y = ty;
+			return true;
+		} else {
+			if (get_wall_tile(l, tx, ty)->collision_handler != NULL) {
+				get_wall_tile(l, tx, ty)->collision_handler(l, tx, ty, e);
+			}
+		}
 	}
+	return false;
 }
 
-void move_entity_west(entity *e, level *l)
+bool move_entity_west(entity *e, dungeon *l)
 {
-	move_entity_worker(e, l, e->x - 1, e->y);
+	return move_entity_worker(e, l, e->x - 1, e->y);
 }
 
-void move_entity_east(entity *e, level *l)
+bool move_entity_east(entity *e, dungeon *l)
 {
-	move_entity_worker(e, l, e->x + 1, e->y);
+	return move_entity_worker(e, l, e->x + 1, e->y);
 }
 
-void move_entity_north(entity *e, level *l)
+bool move_entity_north(entity *e, dungeon *l)
 {
-	move_entity_worker(e, l, e->x, e->y - 1);
+	return move_entity_worker(e, l, e->x, e->y - 1);
 }
 
-void move_entity_south(entity *e, level *l)
+bool move_entity_south(entity *e, dungeon *l)
 {
-	move_entity_worker(e, l, e->x, e->y + 1);
+	return move_entity_worker(e, l, e->x, e->y + 1);
 }

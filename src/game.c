@@ -11,12 +11,12 @@
 #include "level.h"
 #include "dungeon.h"
 #include "entity.h"
+#include "enemy.h"
 #include "player.h"
 #include "graphics.h"
 #include "menu.h"
 #include "error.h"
 
-#include "gen_jungle.h"
 #include "gen_city.h"
 
 mode CURRENT_MODE;
@@ -39,6 +39,7 @@ void main_game_loop()
 	int input;
 	int tx, ty; // temporaries
 	int count = 0;
+	bool level_changed;
 	while (GAME_RUNNING) {
 		entity *player = get_player();
 		clear();
@@ -69,48 +70,29 @@ void main_game_loop()
 				draw_messages();
 
 				input = getch();
+				tx = ty = 0;
 				switch (input) {
 					case 'h':
-						move_entity_west(player, &CURRENT_DUNGEON.sectors[1][1]);
+						level_changed = move_entity_west(player, &CURRENT_DUNGEON);
+						tx = -1;
 						break;
 					case 'l':
-						move_entity_east(player, &CURRENT_DUNGEON.sectors[1][1]);
+						level_changed = move_entity_east(player, &CURRENT_DUNGEON);
+						tx = 1;
 						break;
 					case 'k':
-						move_entity_north(player, &CURRENT_DUNGEON.sectors[1][1]);
+						level_changed = move_entity_north(player, &CURRENT_DUNGEON);
+						ty = -1;
 						break;
 					case 'j':
-						move_entity_south(player, &CURRENT_DUNGEON.sectors[1][1]);
+						level_changed = move_entity_south(player, &CURRENT_DUNGEON);
+						ty = 1;
 						break;
 					case 'q':
 						GAME_RUNNING = false;
 						break;
 				}
-				tx = 0;
-				ty = 0;
-				if (player->x < 0) {
-					tx = -1;
-				} else if (player->x >= LEVEL_DIM) {
-					tx = 1;
-				}
-				if (player->y < 0) {
-					ty = -1;
-				} else if (player->y >= LEVEL_DIM) {
-					ty = 1;
-				}
-				if (tx != 0 || ty != 0) {
-					if (CURRENT_DUNGEON.player_x == 0 && tx == -1) {
-						player->x = 0;
-						break;
-					} else {
-						player->x = universal_to_sector(sector_to_universal(player->x, CURRENT_DUNGEON.player_x));
-					}
-					if (CURRENT_DUNGEON.player_y == 0 && ty == -1) {
-						player->y = 0;
-						break;
-					} else {
-						player->y = universal_to_sector(sector_to_universal(player->y, CURRENT_DUNGEON.player_y));
-					}
+				if (level_changed) {
 					move_player_dungeon(&CURRENT_DUNGEON, CURRENT_DUNGEON.player_x + tx, CURRENT_DUNGEON.player_y + ty);
 				}
 				break;

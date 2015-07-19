@@ -1,0 +1,6 @@
+rogue
+session.vim
+.ycm_extra_conf.py
+*.pyc
+*.o
+build_gcc/*

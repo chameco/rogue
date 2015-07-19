@@ -14,8 +14,6 @@
 #include "genutils.h"
 #include "graphics.h"
 
-#include "gen_jungle.h"
-
 void __handler(level *l, entity *e)
 {
 	hud_line(2, "goblin", GREEN);
@@ -39,7 +37,7 @@ void __gen_city(level *l)
 	}
 	entity *e = &l->enemies[l->enemy_index++];
 	e->x = 0;
-	e->y = 0;
+	e->y = 1;
 	e->glyph = 'g';
 	e->color = GREEN;
 	e->at = AI_NONE;

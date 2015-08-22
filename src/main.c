@@ -19,8 +19,10 @@ int main(int argc, char *argv[])
 	initialize_player();
 	initialize_menu();
 
-	menu_line(0, "C I B O LA", YELLOW);
-	menu_line(1, "~ Memories of a cold, hard world", WHITE);
+	menu_line(0, "roguelike", BLUE);
+	char sprintf_buffer[256];
+	sprintf(sprintf_buffer, "~ memories of a %s world", generate_adjective(EMPTY));
+	menu_line(1, sprintf_buffer, WHITE);
 	set_mode(MODE_MENU);
 	
 	set_current_dungeon("overworld", 1, 1);

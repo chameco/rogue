@@ -39,3 +39,4 @@ $(GAME): $(BUILD_DIR)/main.o $(OBJS)
 
 clean:
 	rm $(BUILD_DIR)/*.o
+	rm dungeons/overworld/*

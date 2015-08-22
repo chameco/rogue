@@ -46,7 +46,7 @@ bool collide_enemies(level *l, entity *e, int x, int y)
 	for (int i = 0; i < l->enemy_index; ++i) {
 		if (l->enemies[i].x == x && l->enemies[i].y == y) {
 			if (l->enemies[i].collision_handler != NULL) {
-				l->enemies[i].collision_handler(l, e);
+				l->enemies[i].collision_handler(l, &l->enemies[i], e);
 			}
 			return true;
 		}

@@ -14,6 +14,7 @@ color RED;
 color GREEN;
 color BLUE;
 color YELLOW;
+color MAGENTA;
 
 void initialize_color();
 void draw_glyph(char g, color c, int x, int y);

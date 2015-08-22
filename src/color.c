@@ -13,6 +13,7 @@ color RED = {COLOR_RED, COLOR_BLACK};
 color GREEN = {COLOR_GREEN, COLOR_BLACK};
 color BLUE = {COLOR_BLUE, COLOR_BLACK};
 color YELLOW = {COLOR_YELLOW, COLOR_BLACK};
+color PINK = {COLOR_MAGENTA, COLOR_BLACK};
 
 void initialize_color()
 {

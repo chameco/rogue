@@ -19,7 +19,8 @@ typedef enum tile_index {
 	TREE,
 	STONE_FLOOR,
 	STONE_WALL,
-	DOOR
+	DOOR,
+	TILE_INDEX_MARKER,
 } tile_index;
 
 typedef struct tile {
@@ -37,8 +38,8 @@ typedef struct level {
 	int enemy_index;
 } level;
 
-void load_level(level *l, char *p);
-void save_level(level *l, char *p);
+void load_level(level *l, char *dungeon, int x, int y);
+void save_level(level *l, char *dungeon, int x, int y);
 
 tile *get_wall_tile(level *l, int x, int y);
 tile *get_floor_tile(level *l, int x, int y);

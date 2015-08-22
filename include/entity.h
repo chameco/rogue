@@ -19,9 +19,10 @@ typedef struct entity {
 	char glyph;
 	color color;
 	ai_type at;
+	char name[64];
 	item *weapon;
 	item inventory[26];
-	void (*collision_handler)(struct level *l, struct entity *entity);
+	void (*collision_handler)(struct level *l, struct entity *entity, struct entity *other);
 } entity;
 
 

@@ -47,3 +47,35 @@ void generate_room(level *l, claimed_tiles *c, int prio, int w, int h, tile_inde
 		}
 	}
 }
+
+void generate_north_wall(level *l, claimed_tiles *c, int prio, tile_index wall)
+{
+	for (int i = 0; i < LEVEL_DIM; ++i) {
+		l->walls[i][0] = wall;
+		c->priority[i][0] = prio;
+	}
+}
+
+void generate_south_wall(level *l, claimed_tiles *c, int prio, tile_index wall)
+{
+	for (int i = 0; i < LEVEL_DIM; ++i) {
+		l->walls[i][LEVEL_DIM - 1] = wall;
+		c->priority[i][LEVEL_DIM - 1] = prio;
+	}
+}
+
+void generate_west_wall(level *l, claimed_tiles *c, int prio, tile_index wall)
+{
+	for (int i = 0; i < LEVEL_DIM; ++i) {
+		l->walls[0][i] = wall;
+		c->priority[0][i] = prio;
+	}
+}
+
+void generate_east_wall(level *l, claimed_tiles *c, int prio, tile_index wall)
+{
+	for (int i = 0; i < LEVEL_DIM; ++i) {
+		l->walls[LEVEL_DIM - 1][i] = wall;
+		c->priority[LEVEL_DIM - 1][i] = prio;
+	}
+}

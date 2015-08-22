@@ -13,8 +13,7 @@
 #include "entity.h"
 #include "graphics.h"
 #include "enemy.h"
-
-#include "gen_city.h"
+#include "dispatch_gen.h"
 
 void __collide_door(level *l, int x, int y, entity *e)
 {
@@ -22,7 +21,7 @@ void __collide_door(level *l, int x, int y, entity *e)
 	l->walls[x][y] = VOID;
 }
 
-tile TILES[256] = {
+tile TILES[TILE_INDEX_MARKER] = {
 	{' ', {COLOR_BLACK, COLOR_BLACK}, false, true, NULL}, // void
 	{'.', {COLOR_GREEN, COLOR_BLACK}, true, false, NULL}, // ground
 	{'T', {COLOR_YELLOW, COLOR_GREEN}, true, false, NULL}, // tree
@@ -31,20 +30,24 @@ tile TILES[256] = {
 	{'+', {COLOR_YELLOW, COLOR_BLACK}, true, false, __collide_door} // door
 };
 
-void load_level(level *l, char *p)
+void load_level(level *l, char *dungeon, int x, int y)
 {
-	FILE *f = fopen(p, "r");
+	char path[100];
+	sprintf(path, "dungeons/%s/%d_%d.lvl", dungeon, x, y);
+	FILE *f = fopen(path, "r");
 	if (f == NULL) {
-		__gen_city(l); //TODO
+		dispatch_gen(l, x, y);
 	} else {
 		fread(l, sizeof(level), 1, f);
 		fclose(f);
 	}
 }
 
-void save_level(level *l, char *p)
+void save_level(level *l, char *dungeon, int x, int y)
 {
-	FILE *f = fopen(p, "w+");
+	char path[100];
+	sprintf(path, "dungeons/%s/%d_%d.lvl", dungeon, x, y);
+	FILE *f = fopen(path, "w+");
 	fwrite(l, sizeof(level), 1, f);
 	fclose(f);
 }

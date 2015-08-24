@@ -1,18 +1,34 @@
 #pragma once
 
-#include <stdbool.h>
+#ifndef WINDOWS
+#include <ncurses.h>
+#else
+#include "curses.h"
+#endif
+
 #include "item.h"
 #include "color.h"
-
-#define AI_SUBTYPES 32
 
 struct level;
 struct dungeon;
 
 typedef enum ai_type {
-	AI_NONE = 0,
-	AI_RANDOM_WALK
+	AI_NONE=0,
+	AI_RANDOM_WALK,
+	AI_CHASE,
+	AI_CHAD,
+	AI_STACY,
+	AI_OTAKU,
+	AI_TYPE_MARKER,
 } ai_type;
+
+typedef enum entity_stats {
+	HP=0,
+	STR,
+	DEF,
+	DEX,
+	ENTITY_STATS_MARKER
+} entity_stats;
 
 typedef struct entity {
 	int x, y;
@@ -20,9 +36,10 @@ typedef struct entity {
 	color color;
 	ai_type at;
 	char name[64];
-	item *weapon;
+	int stats[ENTITY_STATS_MARKER];
+	int weapon_slot;
+	int armor_slot;
 	item inventory[26];
-	void (*collision_handler)(struct level *l, struct entity *entity, struct entity *other);
 } entity;
 
 

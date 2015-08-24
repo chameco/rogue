@@ -1,9 +1,12 @@
 #pragma once
 
 #include <stddef.h>
-#include <stdbool.h>
 
+#ifndef WINDOWS
 #include <ncurses.h>
+#else
+#include "curses.h"
+#endif
 
 #include "color.h"
 #include "entity.h"
@@ -20,6 +23,7 @@ typedef enum tile_index {
 	STONE_FLOOR,
 	STONE_WALL,
 	DOOR,
+	PLAZA,
 	TILE_INDEX_MARKER,
 } tile_index;
 
@@ -32,10 +36,11 @@ typedef struct tile {
 } tile;
 
 typedef struct level {
+	int enemy_index;
 	tile_index walls[LEVEL_DIM][LEVEL_DIM];
 	tile_index floor[LEVEL_DIM][LEVEL_DIM];
+	item items[LEVEL_DIM][LEVEL_DIM];
 	entity enemies[MAX_ENEMIES];
-	int enemy_index;
 } level;
 
 void load_level(level *l, char *dungeon, int x, int y);

@@ -5,28 +5,34 @@
 #include <stdio.h>
 #include <time.h>
 
+#ifndef WINDOWS
 #include <ncurses.h>
+#else
+#include "curses.h"
+#endif
 
 #include <cuttle/debug.h>
 
 #include "error.h"
 #include "level.h"
 
-void generate_tile(level *l, claimed_tiles *c, int prio, tile_index wall)
+void generate_tile(level *l, claimed_tiles *c, int prio, int x, int y, tile_index wall)
 {
-	int x = rand() % LEVEL_DIM;
-	int y = rand() % LEVEL_DIM;
-
 	if (prio > c->priority[x][y]) {
 		l->walls[x][y] = wall;
 		c->priority[x][y] = prio;
 	}
 }
 
-void generate_room(level *l, claimed_tiles *c, int prio, int w, int h, tile_index wall, tile_index floor)
+void generate_random_tile(level *l, claimed_tiles *c, int prio, tile_index wall)
 {
-	int x = rand() % (LEVEL_DIM - w);
-	int y = rand() % (LEVEL_DIM - h);
+	int x = rand() % LEVEL_DIM;
+	int y = rand() % LEVEL_DIM;
+	generate_tile(l, c, prio, x, y, wall);
+}
+
+void generate_room(level *l, claimed_tiles *c, int prio, int x, int y, int w, int h, tile_index wall, tile_index floor)
+{
 	int mx = x + w;
 	int my = y + h;
 	for (int i = x; i < mx; ++i) {
@@ -46,6 +52,14 @@ void generate_room(level *l, claimed_tiles *c, int prio, int w, int h, tile_inde
 			}
 		}
 	}
+}
+
+
+void generate_random_room(level *l, claimed_tiles *c, int prio, int w, int h, tile_index wall, tile_index floor)
+{
+	int x = rand() % (LEVEL_DIM - w);
+	int y = rand() % (LEVEL_DIM - h);
+	generate_room(l, c, prio, x, y, w, h, wall, floor);
 }
 
 void generate_north_wall(level *l, claimed_tiles *c, int prio, tile_index wall)

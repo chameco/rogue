@@ -2,7 +2,14 @@
 
 typedef enum mode {
 	MODE_MENU,
-	MODE_GAME
+	MODE_CREATE_CHARACTER,
+	MODE_INVENTORY,
+	MODE_GAME,
+	MODE_INTRO,
+	MODE_INTRO2,
+	MODE_HOWTOPLAY,
+	MODE_LOSS,
+	MODE_VICTORY,
 } mode;
 
 void set_mode(mode m);

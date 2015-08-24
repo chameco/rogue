@@ -5,7 +5,11 @@
 #include <stdio.h>
 #include <time.h>
 
+#ifndef WINDOWS
 #include <ncurses.h>
+#else
+#include "curses.h"
+#endif
 
 #include <cuttle/debug.h>
 
@@ -14,7 +18,7 @@
 #include "error.h"
 
 colored_string MENU[24];
-char *ADJECTIVES[WORDFLAVOR_MARKER][6] = {
+char *ADJECTIVES[ADJECTIVES_MARKER][6] = {
 	[NEGATIVE] = {"bad", "awful", "horrible", "terrible", "crushing", "evil"},
 	[POSITIVE] = {"good", "great", "fantastic", "excellent", "wonderful", "amazing"},
 	[NEUTRAL] = {"mediocre", "average", "so-so", "unnotable", "normal", "regular"},
@@ -28,7 +32,7 @@ char *NAMES[NAMES_MARKER][6] = {
 	[STACY_FIRST_NAME] = {"Stacy", "Amber", "Sydney", "Tiffani", "Ashley", "Missi"},
 	[NORMIE_LAST_NAME] = {"Johnson", "Smith", "Jones", "Brown", "Thomas", "Hill"},
 	[OTAKU_TITLE_NAME] = {"God", "Blademaster", "Slayer", "Samurai", "Darkness", "Master"},
-	[NORMIE_JOB] = {"Store Clerk", "Heavy Drinker", "Theist", "Normie", "Pothead", "Casual"},
+	[NORMIE_JOB] = {"Store Clerk", "Sports Enthusiast", "Salaryman", "Normie", "Well-Adjusted Human Being", "Casual"},
 };
 
 char *SUFFIXES[SUFFIXES_MARKER][6] = {
@@ -54,6 +58,11 @@ char *generate_name(names f)
 char *generate_suffix(suffixes f)
 {
 	return SUFFIXES[f][rand() % 6];
+}
+
+void generate_player_name(char *buffer, int bufsize, char *base)
+{
+	snprintf(buffer, bufsize, "%s-%s, The %s %s", base, generate_suffix(JAPANESE), generate_adjective(OTAKU_TITLE_DESCRIPTIVE), generate_name(OTAKU_TITLE_NAME));
 }
 
 void generate_otaku_name(char *buffer, int bufsize)

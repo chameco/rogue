@@ -11,5 +11,5 @@ void finalize_graphics();
 void hud_line(int row, char *t, color c);
 void draw_hud();
 
-void message_line(int row, char *t, color c);
+void message_line(char *t, color c);
 void draw_messages();

@@ -1,0 +1,32 @@
+CC = x86_64-w64-mingw32-cc
+SRCS = $(filter-out main.c,$(foreach file,$(wildcard src/*),$(notdir $(file))))
+GAME = win32/rogue.exe
+BUILD_DIR = build_$(CC)
+OBJS = $(addprefix $(BUILD_DIR)/, $(SRCS:.c=.o))
+
+CFLAGS = -static -DWINDOWS -Iinclude -Iwinclude -std=c99 -g -Wall -I/usr/x86_64-w64-mingw32/include -I/usr/local/include
+
+LINKER_FLAGS = -Lwin32 -mwindows -lmingw32 -lm -lcuttle -lSDL
+
+vpath %.c src
+
+.PHONY: all directories package clean
+
+all: directories $(GAME)
+
+directories: $(BUILD_DIR)
+
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+
+$(BUILD_DIR)/%.o: %.c
+	$(CC) -o $@ -c $(CFLAGS) $<
+
+$(GAME): $(BUILD_DIR)/main.o $(OBJS)
+	$(CC) $^ win32/pdcurses.a $(LINKER_FLAGS) -o $@
+
+package:
+	zip -r rogue_win32.zip win32
+
+clean:
+	rm $(BUILD_DIR)/*.o

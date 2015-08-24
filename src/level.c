@@ -3,8 +3,13 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <errno.h>
 
+#ifndef WINDOWS
 #include <ncurses.h>
+#else
+#include "curses.h"
+#endif
 
 #include <cuttle/debug.h>
 
@@ -17,28 +22,29 @@
 
 void __collide_door(level *l, int x, int y, entity *e)
 {
-	message_line(1, "The door opens.", YELLOW);
+	message_line("The door opens.", YELLOW);
 	l->walls[x][y] = VOID;
 }
 
 tile TILES[TILE_INDEX_MARKER] = {
-	{' ', {COLOR_BLACK, COLOR_BLACK}, false, true, NULL}, // void
-	{'.', {COLOR_GREEN, COLOR_BLACK}, true, false, NULL}, // ground
-	{'T', {COLOR_YELLOW, COLOR_GREEN}, true, false, NULL}, // tree
-	{'.', {COLOR_WHITE, COLOR_BLACK}, true, false, NULL}, // stone_floor
-	{'#', {COLOR_WHITE, COLOR_BLACK}, true, false, NULL}, // stone_wall
-	{'+', {COLOR_YELLOW, COLOR_BLACK}, true, false, __collide_door} // door
+	{' ', {COLOR_BLACK, COLOR_BLACK}, 0, 1, NULL}, // void
+	{'.', {COLOR_GREEN, COLOR_BLACK}, 1, 0, NULL}, // ground
+	{'T', {COLOR_YELLOW, COLOR_GREEN}, 1, 0, NULL}, // tree
+	{'.', {COLOR_WHITE, COLOR_BLACK}, 1, 0, NULL}, // stone_floor
+	{'#', {COLOR_WHITE, COLOR_BLACK}, 1, 0, NULL}, // stone_wall
+	{'+', {COLOR_YELLOW, COLOR_BLACK}, 1, 0, __collide_door}, // door
+	{'.', {COLOR_YELLOW, COLOR_BLACK}, 1, 0, NULL}, // plaza
 };
 
 void load_level(level *l, char *dungeon, int x, int y)
 {
 	char path[100];
 	sprintf(path, "dungeons/%s/%d_%d.lvl", dungeon, x, y);
-	FILE *f = fopen(path, "r");
+	FILE *f = fopen(path, "rb");
 	if (f == NULL) {
 		dispatch_gen(l, x, y);
 	} else {
-		fread(l, sizeof(level), 1, f);
+		fread(l, 1, sizeof(level), f);
 		fclose(f);
 	}
 }
@@ -47,8 +53,8 @@ void save_level(level *l, char *dungeon, int x, int y)
 {
 	char path[100];
 	sprintf(path, "dungeons/%s/%d_%d.lvl", dungeon, x, y);
-	FILE *f = fopen(path, "w+");
-	fwrite(l, sizeof(level), 1, f);
+	FILE *f = fopen(path, "wb+");
+	fwrite(l, 1, sizeof(level), f);
 	fclose(f);
 }
 
@@ -78,6 +84,9 @@ void draw_level(level *l, int camera_x, int camera_y)
 						if (ti != VOID) {
 							draw_glyph(t->glyph, t->color, x - camera_x + MAPVIEW_RADIUS_X, y - camera_y + MAPVIEW_RADIUS_Y);
 						}
+					}
+					if (l->items[x][y].type != EMPTY_SLOT) {
+						draw_glyph(l->items[x][y].glyph, YELLOW, x - camera_x + MAPVIEW_RADIUS_X, y - camera_y + MAPVIEW_RADIUS_Y);
 					}
 				}
 			}

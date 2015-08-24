@@ -1,9 +1,14 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdio.h>
-#include <stdbool.h>
 
+#ifndef WINDOWS
 #include <ncurses.h>
+#else
+#include "curses.h"
+#endif
+
+#include <cuttle/debug.h>
 
 #include "game.h"
 #include "level.h"
@@ -16,16 +21,20 @@ int main(int argc, char *argv[])
 {
 	initialize_graphics();
 
-	initialize_player();
-	initialize_menu();
-
-	menu_line(0, "roguelike", BLUE);
-	char sprintf_buffer[256];
-	sprintf(sprintf_buffer, "~ memories of a %s world", generate_adjective(EMPTY));
-	menu_line(1, sprintf_buffer, WHITE);
 	set_mode(MODE_MENU);
+
+	int x, y;
+
+	FILE *f = fopen("dungeons/overworld/coords.dat", "r");
+	if (f == NULL) {
+		x = y = 1;
+	} else {
+		fread(&x, sizeof(x), 1, f);
+		fread(&y, sizeof(y), 1, f);
+		fclose(f);
+	}
 	
-	set_current_dungeon("overworld", 1, 1);
+	set_current_dungeon("overworld", x, y);
 
 	main_game_loop();
 

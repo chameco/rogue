@@ -9,7 +9,7 @@ typedef enum adjectives {
 	EMPTY,
 	OTAKU_TITLE_DESCRIPTIVE,
 	NOSTALGIC,
-	WORDFLAVOR_MARKER,
+	ADJECTIVES_MARKER,
 } adjectives;
 
 typedef enum names {
@@ -33,6 +33,7 @@ char *generate_adjective(adjectives f);
 char *generate_name(names f);
 char *generate_suffix(suffixes f);
 
+void generate_player_name(char *buffer, int bufsize, char *base);
 void generate_otaku_name(char *buffer, int bufsize);
 void generate_chad_name(char *buffer, int bufsize);
 void generate_stacy_name(char *buffer, int bufsize);

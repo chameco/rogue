@@ -5,7 +5,7 @@ typedef struct color {
 } color;
 
 typedef struct colored_string {
-	char string[100];
+	char string[256];
 	color c;
 } colored_string;
 

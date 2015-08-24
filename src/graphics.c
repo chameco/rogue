@@ -4,14 +4,19 @@
 #include <stddef.h>
 #include <stdio.h>
 
+#ifndef WINDOWS
 #include <ncurses.h>
+#else
+#include "curses.h"
+#endif
 
 #include <cuttle/debug.h>
 
 #include "color.h"
 
 colored_string HUD[2 * MAPVIEW_RADIUS_Y];
-colored_string MESSAGES[24 - (2 * MAPVIEW_RADIUS_Y + 1)];
+colored_string MESSAGES[5];
+int MESSAGE_INDEX = 0;
 
 void initialize_graphics()
 {
@@ -44,15 +49,33 @@ void draw_hud()
 	}
 }
 
-void message_line(int row, char *t, color c)
+void message_line(char *t, color c)
 {
-	strncpy(MESSAGES[row].string, t, sizeof(MESSAGES[row].string));
-	MESSAGES[row].c = c;
+	if (MESSAGE_INDEX < 5) {
+	strncpy(MESSAGES[MESSAGE_INDEX].string, t, sizeof(MESSAGES[MESSAGE_INDEX].string));
+	MESSAGES[MESSAGE_INDEX].c = c;
+	MESSAGE_INDEX++;
+	} else {
+		strncpy(MESSAGES[0].string, MESSAGES[1].string, sizeof(MESSAGES[0].string));
+		MESSAGES[0].c = MESSAGES[1].c;
+
+		strncpy(MESSAGES[1].string, MESSAGES[2].string, sizeof(MESSAGES[1].string));
+		MESSAGES[1].c = MESSAGES[2].c;
+
+		strncpy(MESSAGES[2].string, MESSAGES[3].string, sizeof(MESSAGES[2].string));
+		MESSAGES[2].c = MESSAGES[3].c;
+
+		strncpy(MESSAGES[3].string, MESSAGES[4].string, sizeof(MESSAGES[3].string));
+		MESSAGES[3].c = MESSAGES[4].c;
+
+		strncpy(MESSAGES[4].string, t, sizeof(MESSAGES[4].string));
+		MESSAGES[4].c = c;
+	}
 }
 
 void draw_messages()
 {
-	for (int row = 0; row < 24 - (2 * MAPVIEW_RADIUS_Y + 1); ++row) {
+	for (int row = 0; row < 5; ++row) {
 		draw_colored_string(MESSAGES[row], 1, 2 * MAPVIEW_RADIUS_Y + 1 + row);
 	}
 }
